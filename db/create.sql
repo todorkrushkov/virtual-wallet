@@ -1,0 +1,125 @@
+DROP SCHEMA IF EXISTS virtual_wallet;
+CREATE SCHEMA virtual_wallet CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE virtual_wallet;
+
+CREATE TABLE roles
+(
+    role_id BIGINT      NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    name    VARCHAR(10) NOT NULL UNIQUE,
+
+    CHECK ( name IN ('ROLE_USER', 'ROLE_ADMIN') )
+);
+
+CREATE TABLE users
+(
+    user_id       BIGINT       NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    username      VARCHAR(50)  NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name    VARCHAR(50)  NOT NULL,
+    last_name     VARCHAR(50)  NOT NULL,
+    email         VARCHAR(255) NOT NULL UNIQUE,
+    phone_number  VARCHAR(10)  NOT NULL UNIQUE,
+    photo_url     VARCHAR(512) NULL,
+    role_id       BIGINT       NOT NULL,
+    is_blocked    BOOLEAN      NOT NULL DEFAULT FALSE,
+    created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_user_role FOREIGN KEY (role_id) REFERENCES roles (role_id)
+);
+
+CREATE TABLE currencies
+(
+    currency_code CHAR(3)     NOT NULL UNIQUE PRIMARY KEY,
+    name          VARCHAR(50) NOT NULL,
+    symbol        VARCHAR(5)  NOT NULL,
+    decimals      INT         NOT NULL DEFAULT 2,
+    is_active     BOOLEAN     NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE wallets
+(
+    wallet_id     BIGINT         NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    user_id       BIGINT         NOT NULL UNIQUE,
+    balance       DECIMAL(19, 2) NOT NULL DEFAULT 0.00,
+    currency_code CHAR(3)        NOT NULL DEFAULT 'EUR',
+    version       BIGINT         NOT NULL DEFAULT 0,
+    created_at    TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_wallet_user FOREIGN KEY (user_id) REFERENCES users (user_id)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CONSTRAINT fk_wallet_currencies FOREIGN KEY (currency_code) REFERENCES currencies (currency_code)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CHECK ( balance >= 0 )
+);
+
+CREATE TABLE cards
+(
+    card_id          BIGINT       NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    user_id          BIGINT       NOT NULL UNIQUE,
+    card_number      VARCHAR(16)  NOT NULL,
+    expiration_month INT          NOT NULL,
+    expiration_year  INT          NOT NULL,
+    card_holder      VARCHAR(100) NOT NULL,
+    ccv              CHAR(3)      NOT NULL,
+    created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_card_user FOREIGN KEY (user_id) REFERENCES users (user_id)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CHECK ( ccv REGEXP '^[0-9]{3}$' )
+);
+
+CREATE TABLE transactions
+(
+    transaction_id      BIGINT         NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    type                VARCHAR(20)    NOT NULL,
+    status              VARCHAR(20)    NOT NULL,
+    amount              DECIMAL(19, 2) NOT NULL,
+    currency_code       CHAR(3)        NOT NULL,
+
+    sender_wallet_id    BIGINT         NOT NULL,
+    recipient_wallet_id BIGINT         NULL,
+    sender_id           BIGINT         NOT NULL,
+    recipient_id        BIGINT         NULL,
+
+    external_reference  VARCHAR(255)   NULL,
+    created_at          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_tx_currencies FOREIGN KEY (currency_code) REFERENCES currencies (currency_code)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CONSTRAINT fk_tx_sender_wallet FOREIGN KEY (sender_wallet_id) REFERENCES wallets (wallet_id)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CONSTRAINT fk_tx_recipient_wallet FOREIGN KEY (recipient_wallet_id) REFERENCES wallets (wallet_id)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CONSTRAINT fk_tx_sender_user FOREIGN KEY (sender_id) REFERENCES users (user_id)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CONSTRAINT fk_tx_recipient_user FOREIGN KEY (recipient_id) REFERENCES users (user_id)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+
+    CHECK ( type IN ('TRANSFER', 'TOP_UP', 'PAYMENT') ),
+    CHECK ( status IN ('PENDING', 'CONFIRMED', 'FAILED', 'REJECTED') ),
+    CHECK ( amount > 0 )
+);
+
+CREATE INDEX idx_tx_created_at ON transactions (created_at);
+CREATE INDEX idx_tx_sender_wallet ON transactions (sender_wallet_id);
+CREATE INDEX idx_tx_recipient_wallet ON transactions (recipient_wallet_id);
+CREATE INDEX idx_tx_sender_user ON transactions (sender_id);
+CREATE INDEX idx_tx_recipient_user ON transactions (recipient_id);
+CREATE INDEX idx_tx_type ON transactions (type);
+CREATE INDEX idx_tx_status ON transactions (status);
+
+CREATE INDEX idx_tx_sender_time ON transactions (sender_id, created_at);
+CREATE INDEX idx_tx_recipient_time ON transactions (recipient_id, created_at);
+
+CREATE UNIQUE INDEX uq_tx_external_ref ON transactions (external_reference);

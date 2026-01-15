@@ -1,9 +1,17 @@
-# STATUS: Currently in process.
 Developing a secure web application for digital wallet management, enabling seamless user-to-user money transfers and account funding via credit/debit cards
 
 ---
 
-## Contributors
+# STATUS: Currently in process.
+
+# Latest updates:
+``` 
+Log #1:
+- Add all models with their repositories.
+- Add basic business logic.
+- Add Controllers and test if workflow is correct.
+```
+---
 
 For further information, questions, or feedback, feel free to get in touch:
 
