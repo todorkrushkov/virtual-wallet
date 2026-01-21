@@ -24,10 +24,10 @@ VALUES
     (3, 1000.00,'EUR', 0);
 
 INSERT INTO cards
-(user_id, card_number, expiration_month, expiration_year, card_holder, ccv)
+(user_id, card_suffix, expiration_month, expiration_year, card_holder)
 VALUES
-    (1, '4111111111111111', 12, 2028, 'Ivan Petrov',  '123'),
-    (2, '5555555555554444', 11, 2027, 'Maria Ivanova','456');
+    (1, '1111', 12, 2028, 'Ivan Petrov'),
+    (2, '4444', 11, 2027, 'Maria Ivanova');
 
 INSERT INTO transactions
 (type, status, amount, currency_code,

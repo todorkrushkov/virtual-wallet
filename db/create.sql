@@ -60,18 +60,15 @@ CREATE TABLE cards
 (
     card_id          BIGINT       NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
     user_id          BIGINT       NOT NULL UNIQUE,
-    card_number      VARCHAR(16)  NOT NULL,
+    card_suffix      VARCHAR(4)   NOT NULL,
     expiration_month INT          NOT NULL,
     expiration_year  INT          NOT NULL,
     card_holder      VARCHAR(100) NOT NULL,
-    ccv              CHAR(3)      NOT NULL,
     created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_card_user FOREIGN KEY (user_id) REFERENCES users (user_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
-
-    CHECK ( ccv REGEXP '^[0-9]{3}$' )
+        ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE transactions
