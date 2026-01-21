@@ -6,6 +6,12 @@ Developing a secure web application for digital wallet management, enabling seam
 
 # Latest updates:
 ``` 
+Log #2:
+- Add mappers.
+- Update service abstraction.
+- Fix card information to be more secure.
+```
+``` 
 Log #1:
 - Add all models with their repositories.
 - Add basic business logic.
