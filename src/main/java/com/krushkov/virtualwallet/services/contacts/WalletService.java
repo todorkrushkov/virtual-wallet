@@ -13,8 +13,6 @@ public interface WalletService {
 
     Wallet getById(Long walletId);
 
-    Wallet getByUserId(Long userId);
-
     Wallet create(Wallet wallet);
 
     void credit(Long walletId, BigDecimal amount);

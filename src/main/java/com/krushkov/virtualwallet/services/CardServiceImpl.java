@@ -21,12 +21,6 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card getByUserId(Long userId) {
-        return cardRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User", userId));
-    }
-
-    @Override
     @Transactional
     public Card addCard(Long userId, Card card) {
         return cardRepository.save(card);

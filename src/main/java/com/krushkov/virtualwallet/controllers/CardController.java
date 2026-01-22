@@ -21,6 +21,11 @@ public class CardController {
 
     private final CardMapper cardMapper;
 
+    @GetMapping("/{cardId}")
+    public CardResponse getById(@PathVariable Long cardId) {
+        return cardMapper.toResponse(cardService.getById(cardId));
+    }
+
     @PostMapping("/users/{userId}")
     public CardResponse addCard(
             @PathVariable Long userId,
