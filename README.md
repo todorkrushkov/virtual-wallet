@@ -6,6 +6,12 @@ Developing a secure web application for digital wallet management, enabling seam
 
 # Latest updates:
 ``` 
+Log #3:
+- Add pay endpoint to transaction controller.
+- Fix search endpoints.
+- Remove unused service methods.
+```
+``` 
 Log #2:
 - Add mappers.
 - Update service abstraction.

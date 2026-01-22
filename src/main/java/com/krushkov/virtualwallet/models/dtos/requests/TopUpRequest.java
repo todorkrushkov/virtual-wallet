@@ -1,5 +1,6 @@
 package com.krushkov.virtualwallet.models.dtos.requests;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -9,5 +10,8 @@ public record TopUpRequest(
 
         @Positive(message = "Amount must be greater that zero.")
         @NotNull(message = "Amount must be not null.")
-        BigDecimal amount
+        BigDecimal amount,
+
+        @NotBlank(message = "Merchant reference is required.")
+        String merchantReference
 ) {}
