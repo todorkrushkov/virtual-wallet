@@ -34,7 +34,7 @@ INSERT INTO transactions
  sender_wallet_id, recipient_wallet_id,
  sender_id, recipient_id)
 VALUES
-    ('TOP_UP',    'CONFIRMED', 100.00, 'EUR', 1, NULL, 1, NULL),
+    ('TOP_UP',    'CONFIRMED', 100.00, 'EUR', NULL, 1, NULL, 1),
     ('TRANSFER',  'CONFIRMED', 20.00,  'EUR', 1, 2,    1,    2),
-    ('PAYMENT',   'CONFIRMED', 10.00,  'EUR', 2, 3,    2,    3);
+    ('PAYMENT',   'CONFIRMED', 10.00,  'EUR', 2, NULL,    2,    NULL);
 
