@@ -79,9 +79,9 @@ CREATE TABLE transactions
     amount              DECIMAL(19, 2) NOT NULL,
     currency_code       CHAR(3)        NOT NULL,
 
-    sender_wallet_id    BIGINT         NOT NULL,
+    sender_wallet_id    BIGINT         NULL,
     recipient_wallet_id BIGINT         NULL,
-    sender_id           BIGINT         NOT NULL,
+    sender_id           BIGINT         NULL,
     recipient_id        BIGINT         NULL,
 
     external_reference  VARCHAR(255)   NULL,
