@@ -6,6 +6,10 @@ Developing a secure web application for digital wallet management, enabling seam
 
 # Latest updates:
 ``` 
+Log #5:
+- Add JWT implementation
+```
+``` 
 Log #4:
 - Fix sender to be nullable.
 - Add Global Exception Handler.

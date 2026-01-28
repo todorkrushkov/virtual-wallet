@@ -32,6 +32,11 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    public Wallet getByUserId(Long userId) {
+        return walletRepository.findByUserId(userId);
+    }
+
+    @Override
     @Transactional
     public Wallet create(Wallet wallet) {
         return walletRepository.save(wallet);

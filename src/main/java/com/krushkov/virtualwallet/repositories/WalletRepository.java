@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface WalletRepository
         extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet> {
 
-    Optional<Wallet> findByUserId(Long userId);
+    Wallet findByUserId(Long userId);
 
     @Lock(LockModeType.OPTIMISTIC)
     @Query("select w from Wallet w where w.id = :id")

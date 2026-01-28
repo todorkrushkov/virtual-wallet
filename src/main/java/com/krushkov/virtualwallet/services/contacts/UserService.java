@@ -18,4 +18,6 @@ public interface UserService {
     void blockUser(Long id);
 
     void unblockUser(Long id);
+
+    long count();
 }

@@ -13,9 +13,9 @@ public interface TransactionService {
 
     Transaction getById(Long txId);
 
-    Transaction transfer(Long senderWalletId, Long recipientWalletId, BigDecimal amount);
+    Transaction transfer(Long recipientWalletId, BigDecimal amount);
 
-    Transaction topUp(Long walletId, BigDecimal amount, String externalReference);
+    Transaction topUp(BigDecimal amount, String externalReference);
 
-    Transaction pay(Long senderWalletId, BigDecimal amount, String externalReference);
+    Transaction pay(BigDecimal amount, String externalReference);
 }

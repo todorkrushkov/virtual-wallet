@@ -5,10 +5,12 @@ import com.krushkov.virtualwallet.models.Card;
 import com.krushkov.virtualwallet.models.User;
 import com.krushkov.virtualwallet.models.dtos.requests.CardCreateRequest;
 import com.krushkov.virtualwallet.models.dtos.responses.CardResponse;
+import com.krushkov.virtualwallet.security.auth.SecurityContextUtil;
 import com.krushkov.virtualwallet.services.contacts.CardService;
 import com.krushkov.virtualwallet.services.contacts.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

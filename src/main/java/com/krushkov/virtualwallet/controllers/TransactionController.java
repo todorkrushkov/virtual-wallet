@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -57,21 +58,16 @@ public class TransactionController {
     }
 
     @PostMapping("/transfer")
-    public TransactionResponse transfer(
-            @RequestParam Long senderWalletId,
-            @Valid @RequestBody TransferRequest request
-    ) {
+    public TransactionResponse transfer(@Valid @RequestBody TransferRequest request) {
         return transactionMapper.toResponse(
-                transactionService.transfer(senderWalletId, request.recipientUserId(), request.amount())
+                transactionService.transfer(request.recipientUserId(), request.amount())
         );
     }
 
     @PostMapping("/pay")
-    public TransactionResponse pay(
-            @RequestParam Long senderWalletId,
-            @Valid @RequestBody PaymentRequest request) {
+    public TransactionResponse pay(@Valid @RequestBody PaymentRequest request) {
         return transactionMapper.toResponse(
-                transactionService.pay(senderWalletId, request.amount(), request.merchantReference())
+                transactionService.pay(request.amount(), request.merchantReference())
         );
     }
 }
