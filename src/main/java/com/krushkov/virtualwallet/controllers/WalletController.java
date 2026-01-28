@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -48,10 +49,7 @@ public class WalletController {
     }
 
     @PostMapping("/{walletId}/top-up")
-    public void topUp(
-            @PathVariable Long walletId,
-            @Valid @RequestBody TopUpRequest request
-    ) {
-        transactionService.topUp(walletId, request.amount(), request.merchantReference());
+    public void topUp(@Valid @RequestBody TopUpRequest request) {
+        transactionService.topUp(request.amount(), request.merchantReference());
     }
 }

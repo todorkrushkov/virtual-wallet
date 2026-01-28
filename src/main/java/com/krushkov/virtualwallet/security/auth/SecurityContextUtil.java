@@ -1,41 +1,34 @@
-package com.krushkov.virtualwallet.helpers;
+package com.krushkov.virtualwallet.security.auth;
 
 import com.krushkov.virtualwallet.exceptions.AuthenticationFailureException;
-import com.krushkov.virtualwallet.models.CustomUserDetails;
-import com.krushkov.virtualwallet.models.Role;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class SecurityContextHelper {
+public class SecurityContextUtil {
 
-    public static Long getCurrentUserId() {
-        CustomUserDetails userDetails = extractCustomUserDetails();
+    public static Long getUserDetailsId() {
+        UserPrincipal userDetails = extractCustomUserDetails();
         return userDetails.getId();
     }
 
-    public static String getCurrentUserUsername() {
-        CustomUserDetails userDetails = extractCustomUserDetails();
+    public static String getUserDetailsUsername() {
+        UserPrincipal userDetails = extractCustomUserDetails();
         return userDetails.getUsername();
     }
 
-    public static String getCurrentUserEmail() {
-        CustomUserDetails userDetails = extractCustomUserDetails();
-        return userDetails.getEmail();
+    public static Boolean getUserDetailsIsBlocked() {
+        UserPrincipal userDetails = extractCustomUserDetails();
+        return userDetails.getIsBlocked();
     }
 
-    public static Role getCurrentUserRole() {
-        CustomUserDetails userDetails = extractCustomUserDetails();
-        return userDetails.getRole();
-    }
-
-    private static CustomUserDetails extractCustomUserDetails() {
+    private static UserPrincipal extractCustomUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null
                 || !auth.isAuthenticated()
                 || auth.getPrincipal() == null
                 || auth.getPrincipal().equals("anonymousUser")
-                || !(auth.getPrincipal() instanceof CustomUserDetails principal)
+                || !(auth.getPrincipal() instanceof UserPrincipal principal)
         ) {
             throw new AuthenticationFailureException("Authentication required.");
         }

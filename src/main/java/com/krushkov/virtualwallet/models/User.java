@@ -24,7 +24,7 @@ public class User {
     private String username;
 
     @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    private String password;
 
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
@@ -35,18 +35,18 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone_number", nullable = false, unique = true)
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     @Column(name = "photo_url", length = 512)
     private String photoUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Column(name = "is_blocked", nullable = false)
-    private Boolean isBlocked;
+    private Boolean isBlocked = Boolean.FALSE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -1,17 +1,19 @@
 package com.krushkov.virtualwallet.services;
 
-import com.krushkov.virtualwallet.exceptions.AccessDeniedException;
-import com.krushkov.virtualwallet.exceptions.EntityDuplicateException;
 import com.krushkov.virtualwallet.exceptions.EntityNotFoundException;
 import com.krushkov.virtualwallet.helpers.validations.UserValidationHelper;
+import com.krushkov.virtualwallet.models.Role;
 import com.krushkov.virtualwallet.models.User;
 import com.krushkov.virtualwallet.models.dtos.filters.UserFilterOptions;
+import com.krushkov.virtualwallet.models.enums.RoleType;
+import com.krushkov.virtualwallet.repositories.RoleRepository;
 import com.krushkov.virtualwallet.repositories.UserRepository;
 import com.krushkov.virtualwallet.repositories.specifications.UserSpecifications;
 import com.krushkov.virtualwallet.services.contacts.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public Page<User> search(UserFilterOptions filters, Pageable pageable) {
@@ -35,23 +39,29 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User user) {
-        UserValidationHelper.validateUsernameNotTaken(userRepository, user.getUsername());
-        UserValidationHelper.validateEmailNotTaken(userRepository, user.getEmail());
-        UserValidationHelper.validatePhoneNumberNotTaken(userRepository, user.getPhoneNumber());
+        UserValidationHelper.validateUsernameNotTaken(userRepository, user.getUsername(), null);
+        UserValidationHelper.validateEmailNotTaken(userRepository, user.getEmail(), null);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role role = roleRepository.findByName(RoleType.USER)
+                .orElseThrow(() -> new EntityNotFoundException("Role", "name", "USER"));
+
+        user.setRole(role);
 
         return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public User update(Long id, User user) {
-        User existing = getById(id);
+    public User update(Long targetUserId, User updatedUser) {
+        User existing = getById(targetUserId);
 
-        UserValidationHelper.validateUsernameNotTaken(userRepository, existing.getUsername());
-        UserValidationHelper.validateEmailNotTaken(userRepository, existing.getEmail());
-        UserValidationHelper.validatePhoneNumberNotTaken(userRepository, existing.getPhoneNumber());
+        UserValidationHelper.validateUsernameNotTaken(userRepository, existing.getUsername(), targetUserId);
+        UserValidationHelper.validateEmailNotTaken(userRepository, existing.getEmail(), targetUserId);
+        UserValidationHelper.validatePhoneNumberNotTaken(userRepository, existing.getPhoneNumber(), targetUserId);
 
-        return userRepository.save(user);
+        return userRepository.save(existing);
     }
 
     @Override
@@ -66,5 +76,10 @@ public class UserServiceImpl implements UserService {
     public void unblockUser(Long id) {
         User user = getById(id);
         user.setIsBlocked(false);
+    }
+
+    @Override
+    public long count() {
+        return userRepository.count();
     }
 }

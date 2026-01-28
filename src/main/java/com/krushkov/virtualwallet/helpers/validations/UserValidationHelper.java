@@ -7,24 +7,31 @@ import com.krushkov.virtualwallet.repositories.UserRepository;
 
 public final class UserValidationHelper {
 
-    private UserValidationHelper() {}
-
-    public static void validateUsernameNotTaken(UserRepository repository, String username) {
-        if (repository.existsByUsername(username)) {
-            throw new EntityDuplicateException("User", "username", username);
-        }
+    private UserValidationHelper() {
     }
 
-    public static void validateEmailNotTaken(UserRepository repository, String email) {
-        if (repository.existsByEmail(email)) {
-            throw new EntityDuplicateException("User", "email", email);
-        }
+    public static void validateUsernameNotTaken(UserRepository repository, String newUsername, Long targetUserId) {
+        repository.findByUsername(newUsername)
+                .filter(u -> !u.getId().equals(targetUserId))
+                .ifPresent(u -> {
+                    throw new EntityDuplicateException("User", "username", newUsername);
+                });
     }
 
-    public static void validatePhoneNumberNotTaken(UserRepository repository, String phoneNumber) {
-        if (repository.existsByPhoneNumber(phoneNumber)) {
-            throw new EntityDuplicateException("User", "phone number", phoneNumber);
-        }
+    public static void validateEmailNotTaken(UserRepository repository, String newEmail, Long targetUserId) {
+        repository.findByUsername(newEmail)
+                .filter(u -> !u.getId().equals(targetUserId))
+                .ifPresent(u -> {
+                    throw new EntityDuplicateException("User", "email", newEmail);
+                });
+    }
+
+    public static void validatePhoneNumberNotTaken(UserRepository repository, String newPhoneNumber, Long targetUserId) {
+        repository.findByUsername(newPhoneNumber)
+                .filter(u -> !u.getId().equals(targetUserId))
+                .ifPresent(u -> {
+                    throw new EntityDuplicateException("User", "phone number", newPhoneNumber);
+                });
     }
 
     public static void validateNotBlocked(User user) {

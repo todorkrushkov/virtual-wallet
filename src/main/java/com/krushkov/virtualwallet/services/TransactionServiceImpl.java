@@ -6,6 +6,7 @@ import com.krushkov.virtualwallet.models.Wallet;
 import com.krushkov.virtualwallet.models.dtos.filters.TransactionFilterOptions;
 import com.krushkov.virtualwallet.repositories.TransactionRepository;
 import com.krushkov.virtualwallet.repositories.specifications.TransactionSpecifications;
+import com.krushkov.virtualwallet.security.auth.SecurityContextUtil;
 import com.krushkov.virtualwallet.services.contacts.TransactionService;
 import com.krushkov.virtualwallet.services.contacts.WalletService;
 import com.krushkov.virtualwallet.services.processors.PaymentTransactionProcessor;
@@ -43,9 +44,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public Transaction transfer(Long senderWalletId, Long recipientWalletId, BigDecimal amount) {
+    public Transaction transfer(Long recipientWalletId, BigDecimal amount) {
+        Long senderId = SecurityContextUtil.getUserDetailsId();
 
-        Wallet senderWallet = walletService.getById(senderWalletId);
+        Wallet senderWallet = walletService.getByUserId(senderId);
         Wallet recipientWallet = walletService.getById(recipientWalletId);
 
         Transaction tx = transferProcessor.process(senderWallet, recipientWallet, amount);
@@ -54,9 +56,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public Transaction topUp(Long walletId, BigDecimal amount, String externalReference) {
+    public Transaction topUp(BigDecimal amount, String externalReference) {
+        Long senderId = SecurityContextUtil.getUserDetailsId();
 
-        Wallet wallet = walletService.getById(walletId);
+        Wallet wallet = walletService.getByUserId(senderId);
 
         Transaction tx = topUpProcessor.process(wallet, amount, externalReference);
         return transactionRepository.save(tx);
@@ -64,9 +67,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public Transaction pay(Long senderWalletId, BigDecimal amount, String externalReference) {
+    public Transaction pay(BigDecimal amount, String externalReference) {
+        Long senderId = SecurityContextUtil.getUserDetailsId();
 
-        Wallet senderWallet = walletService.getById(senderWalletId);
+        Wallet senderWallet = walletService.getByUserId(senderId);
 
         Transaction tx = paymentProcessor.process(senderWallet, amount, externalReference);
         return transactionRepository.save(tx);

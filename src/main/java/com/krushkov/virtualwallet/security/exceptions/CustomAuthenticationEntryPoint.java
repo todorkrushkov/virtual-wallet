@@ -1,4 +1,4 @@
-package com.krushkov.virtualwallet.exceptions;
+package com.krushkov.virtualwallet.security.exceptions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.krushkov.virtualwallet.models.dtos.responses.api.ApiErrorResponse;
@@ -24,7 +24,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException autheException
+            AuthenticationException authException
     ) throws IOException {
         ApiErrorResponse errorResponse =
                 ApiErrorResponse.error(HttpStatus.UNAUTHORIZED.value(), request.getRequestURI(), message);

@@ -42,7 +42,7 @@ public class Transaction {
     private Currency currency;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sender_wallet_id", nullable = false)
+    @JoinColumn(name = "sender_wallet_id")
     private Wallet senderWallet;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,7 +50,7 @@ public class Transaction {
     private Wallet recipientWallet;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "sender_id")
     private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)

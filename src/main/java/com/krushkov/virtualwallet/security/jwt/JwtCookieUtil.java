@@ -1,4 +1,4 @@
-package com.krushkov.virtualwallet.jwt;
+package com.krushkov.virtualwallet.security.jwt;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;

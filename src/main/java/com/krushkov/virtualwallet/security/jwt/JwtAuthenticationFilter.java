@@ -1,7 +1,7 @@
-package com.krushkov.virtualwallet.jwt;
+package com.krushkov.virtualwallet.security.jwt;
 
-import com.krushkov.virtualwallet.models.CustomUserDetails;
-import com.krushkov.virtualwallet.services.CustomUserDetailsService;
+import com.krushkov.virtualwallet.security.auth.UserPrincipal;
+import com.krushkov.virtualwallet.security.auth.UserPrincipalService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserPrincipalService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String username = jwtUtil.extractUsername(token);
-            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserPrincipal userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtUtil.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(

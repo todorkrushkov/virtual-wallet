@@ -2,8 +2,8 @@ USE virtual_wallet;
 
 INSERT INTO roles (name)
 VALUES
-    ('ROLE_USER'),
-    ('ROLE_ADMIN');
+    ('USER'),
+    ('ADMIN');
 
 INSERT INTO currencies (currency_code, name, symbol, decimals, is_active)
 VALUES
@@ -12,9 +12,9 @@ VALUES
 INSERT INTO users
 (username, password_hash, first_name, last_name, email, phone_number, photo_url, role_id, is_blocked)
 VALUES
-    ('ivan',  'pass123',  'Ivan',  'Petrov',  'ivan@test.com',  '0888000001', NULL, 1, FALSE),
-    ('maria', 'pass123', 'Maria', 'Ivanova', 'maria@test.com', '0888000002', NULL, 1, FALSE),
-    ('admin', 'pass123', 'Admin', 'Root',   'admin@test.com', '0888000099', NULL, 2, FALSE);
+    ('ivan',  '$2a$12$D16F1eglu1b2dtENlZ.EuukCkEBw8O6u7mFPwlvs3XQwTctnpmVJ2',  'Ivan',  'Petrov',  'ivan@test.com',  '0888000001', NULL, 1, FALSE),
+    ('maria', '$2a$12$S8cFVCy311hXZhI61RPlFOM1OIWcYmXVyE5e6lA9yVZXylAo6YZ7G', 'Maria', 'Ivanova', 'maria@test.com', '0888000002', NULL, 1, FALSE),
+    ('admin', '$2a$12$xorAQ5wMayFOM3hMh4iJDOOc6jadYMoWyO2oep0kWvHPnK1ka5x0S', 'Admin', 'Root',   'admin@test.com', NULL, NULL, 2, FALSE);
 
 INSERT INTO wallets
 (user_id, balance, currency_code, version)

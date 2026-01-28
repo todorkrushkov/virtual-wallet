@@ -1,4 +1,4 @@
-package com.krushkov.virtualwallet.exceptions;
+package com.krushkov.virtualwallet.security.exceptions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.krushkov.virtualwallet.models.dtos.responses.api.ApiErrorResponse;

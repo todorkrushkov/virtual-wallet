@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-public class CustomUserDetails implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
     private final Long id;
     private final String username;
@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private final Role role;
     private final Boolean isBlocked;
 
-    public CustomUserDetails(User user) {
+    public UserPrincipal(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();

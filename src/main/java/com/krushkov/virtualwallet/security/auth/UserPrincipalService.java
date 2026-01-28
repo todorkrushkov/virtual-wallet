@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserPrincipalService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Override
-    public CustomUserDetails loadUserByUsername(String identifier) {
+    public UserPrincipal loadUserByUsername(String identifier) {
         final String normalized = identifier.contains("@")
                 ? NormalizationHelper.normalizeStringToLower(identifier)
                 : identifier;
@@ -24,6 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseGet(() -> userRepository.findByEmail(normalized)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + identifier)));
 
-        return new CustomUserDetails(user);
+        return new UserPrincipal(user);
     }
 }

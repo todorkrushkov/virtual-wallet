@@ -1,6 +1,6 @@
-package com.krushkov.virtualwallet.jwt;
+package com.krushkov.virtualwallet.security.jwt;
 
-import com.krushkov.virtualwallet.models.CustomUserDetails;
+import com.krushkov.virtualwallet.security.auth.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,7 +22,7 @@ public class JwtUtil {
     @Value("${security.jwt.expiration}")
     private long expiration;
 
-    public String generateToken(CustomUserDetails userDetails) {
+    public String generateToken(UserPrincipal userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
@@ -40,7 +40,7 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public boolean isTokenValid(String token, CustomUserDetails userDetails) {
+    public boolean isTokenValid(String token, UserPrincipal userDetails) {
         final String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }

@@ -7,7 +7,7 @@ CREATE TABLE roles
     role_id BIGINT      NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
     name    VARCHAR(10) NOT NULL UNIQUE,
 
-    CHECK ( name IN ('ROLE_USER', 'ROLE_ADMIN') )
+    CHECK ( name IN ('USER', 'ADMIN') )
 );
 
 CREATE TABLE users
@@ -18,7 +18,7 @@ CREATE TABLE users
     first_name    VARCHAR(50)  NOT NULL,
     last_name     VARCHAR(50)  NOT NULL,
     email         VARCHAR(255) NOT NULL UNIQUE,
-    phone_number  VARCHAR(10)  NOT NULL UNIQUE,
+    phone_number  VARCHAR(10)  NULL UNIQUE,
     photo_url     VARCHAR(512) NULL,
     role_id       BIGINT       NOT NULL,
     is_blocked    BOOLEAN      NOT NULL DEFAULT FALSE,
@@ -70,6 +70,8 @@ CREATE TABLE cards
     CONSTRAINT fk_card_user FOREIGN KEY (user_id) REFERENCES users (user_id)
         ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+
+# ToDo: Optimize Data Base to handle more than one card for person
 
 CREATE TABLE transactions
 (

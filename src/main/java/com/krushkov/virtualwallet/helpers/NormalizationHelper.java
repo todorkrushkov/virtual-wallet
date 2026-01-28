@@ -1,4 +1,14 @@
 package com.krushkov.virtualwallet.helpers;
 
-public class NormalizationHelper {
+public final class NormalizationHelper {
+
+    private NormalizationHelper() {}
+
+    public static String normalizeStringToLower(String value) {
+        return safeLower(value);
+    }
+
+    private static String safeLower(String value) {
+        return value == null ? null : value.trim().toLowerCase();
+    }
 }
